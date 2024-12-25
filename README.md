@@ -1,8 +1,10 @@
 # Mini-Lisp, Compiler Final Project
 ## Implement Approach
+### Main Idea
 Build an AST while parsing and traverse the AST in pos-order.
-### Syntax Validation
-just print "Syntax error" at `yyerror` .
+
+---
+
 ### Node stucture
 ```C=
 struct Node{
@@ -23,7 +25,7 @@ struct Node{
 - Node Type
     Not all types of nodes will be processed during traversal, some node types are created to distinguish different functionalities in the code. (for better understanding the AST)
     
-    :::spoiler **All the types**
+    **All the types**
     ```
     stmts
     pn         //printnum
@@ -50,18 +52,62 @@ struct Node{
     null
     string     //for creating node in lex side
     ```
-    :::
+    
+---
 
-### Print
-`print-num` itself is a **node**, and its **left** point to the number (can also be some numerical operations), **right** point to NULL
+### Syntax Validation
+just print "Syntax error" at `yyerror` .
+
+---
+
+### print-num
+`print-num` itself is a **node**, and its **left** point to the number (can also be some numerical operations), **right** point to NULL.
+
+If the syntax is correct, we can make sure `print-num` always have a child on its `left`.
+
+
+
+```C=
+void traverse(struct Node* root) {
+...
+    if(root->type=="pn") /* print-num */ {
+        printf("%d\n", root->left->value);
+    }
+...
+}
+```
+... And we just need to print `root->left->value`.
+
+- **AST structure**
+    ![image](https://imgur.com/FmCKBAo =40%x)
+
+
+
+---
+
 ### Numerical Operations
+
+---
+
 ### Logical Operations
+
+---
+
 ### if Expression
+
+---
+
 ### Variable Definition
+
+---
+
 ### Function
+
+---
+
 ### Named Function
 
-## Execute Command
+## Execute Command (Powershell)
 ```shel=
 bison -d -o a.tab.c a.y
 gcc -c -g -I.. a.tab.c
@@ -85,6 +131,8 @@ type data/07_2.lsp | .\a > test_output/a7_2.out
 type data/08_1.lsp | .\a > test_output/a8_1.out
 type data/08_2.lsp | .\a > test_output/a8_2.out
 ```
+
+
 ## reference
 - [Github: flyotlin/mini-lisp](<https://github.com/flyotlin/mini-lisp/tree/master?tab=readme-ov-file#mini-lisp-final-project>)
 - [Github: Zane2453/Mini-LISP-interpreter_Lex-Yacc](<https://github.com/Zane2453/Mini-LISP-interpreter_Lex-Yacc/tree/master>)
