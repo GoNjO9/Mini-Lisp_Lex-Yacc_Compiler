@@ -12,7 +12,7 @@ void yyerror(const char *message);
 struct Node{
     char*   type;
     /*
-    all possible type:
+    all possible types:
         stmts
         pn (printnum)
         pb (printbool)
@@ -57,7 +57,6 @@ struct Node* createNode(struct Node*, struct Node*, char*);
 struct Map* createMap();
 void traverse(struct Node*);
 struct Map* stack[MAX_STACK_SIZE];
-// Function to insert a key-value pair into the map
 void add(struct Map*, char*, int);
 void addNode(struct Map*, char*, struct Node*);
 int get(struct Map*, char*);
