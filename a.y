@@ -61,7 +61,6 @@ void add(struct Map*, char*, int);
 void addNode(struct Map*, char*, struct Node*);
 int get(struct Map*, char*);
 struct Node* getNode(struct Map*, char*);
-void removeKey(struct Map*, char*);
 void printMap(struct Map*, char*);
 void freeMap(struct Map*);
 void push(struct Map*);
@@ -311,7 +310,7 @@ void traverse(struct Node* root) {
         push(func_map);
         traverse(root->left->right);
         root->value = root->left->right->value;
-        pop();
+        freeMap(pop());
         return;
     }
     if(root->type=="pn") {
@@ -470,20 +469,6 @@ struct Node* getNode(struct Map *map, char *key) {
     }
     return NULL; // Return a special value to indicate key not found
 }
-void removeKey(struct Map *map, char *key) {
-    for (int i = 0; i < map->length; i++) {
-        if (strcmp(map->key[i], key) == 0) {
-            free(map->key[i]); // Free the memory allocated for the key
-            for (int j = i; j < map->length - 1; j++) {
-                map->key[j] = map->key[j + 1];
-                map->nodes[j] = map->nodes[j + 1];
-            }
-            map->length--;
-            return;
-        }
-    }
-    printf("Error: Key not found\n");
-}
 void printMap(struct Map *map, char* name) {
     printf("%-20s------------------\n", name);
     for (int i = 0; i < map->length; i++) {
@@ -522,5 +507,7 @@ int main(int argc, char *argv[]) {
     traverse(root);
     /* fprintf (stderr, "traverse done\n"); */
     /* printMap(map, "public variable"); */
+    freeMap(map);
+    freeMap(funcs);
     return(0);
 }
