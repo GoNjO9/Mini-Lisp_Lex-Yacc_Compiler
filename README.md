@@ -20,7 +20,7 @@ struct Node{
 `value` store integer value (e.g. the operation result)
 `cval` store string value (e.g. function/variable name)
 `left` / `right` / `middle` pointer to node's children
-> *For most types of node the middle pointer is point to NULL, used by if statement only (need to handle `test`, `then`, `else`)*
+> *For most types of node the middle pointer is point to `NULL`, used by if statement only (need to handle `test`, `then`, `else`)*
 
 ---
 
@@ -45,7 +45,7 @@ Not all types of nodes will be processed during traversal, some node types are c
 - *neg* => node with type **equ** change to **neg** if left != right
 - *and*
 - *or*
-- *not* => needs/accepts only one `exp` to operate, `left` is always NULL
+- *not* => needs/accepts only one `exp` to operate, `left` is always `NULL`
 
 **others**
 - *stmts*
