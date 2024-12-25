@@ -69,7 +69,7 @@ Just print "Syntax error" at `yyerror` .
 ---
 
 ### print-num
-`print-num` itself is a **node**, and its **left** point to the number (can also be some numerical operations), **right** point to NULL.
+`print-num` itself is a **node**, and its **left** point to the number (can also be some numerical operations), **right** point to `NULL`.
 
 If the syntax is correct, we can make sure `print-num` always have a child on its `left`.
 
