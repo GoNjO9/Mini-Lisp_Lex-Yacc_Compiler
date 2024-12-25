@@ -260,7 +260,7 @@ void traverse(struct Node* root) {
 ```
 I drew my envisioned AST (by the way yacc do the parsing). Then, I wrote a loop to traverse top `fun_ids` (`root->left->left`) and top `params` (`root->right`) simultaneously, and the assign the arguments to local variables.
 
-![image](https://hackmd.io/_uploads/ByH4MoKBJl.png)
+![image](https://github.com/user-attachments/assets/35ce5fd3-93a9-4345-847a-ae612b5fe104)
 
 ---
 
