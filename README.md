@@ -64,7 +64,7 @@ Not all types of nodes will be processed during traversal, some node types are c
 ---
 
 ### Syntax Validation
-just print "Syntax error" at `yyerror` .
+Just print "Syntax error" at `yyerror` .
 
 ---
 
@@ -84,7 +84,7 @@ void traverse(struct Node* root) {
 ...
 }
 ```
-... And we just need to print `root->left->value`.
+And we just need to print `root->left->value`.
 
 
 ---
