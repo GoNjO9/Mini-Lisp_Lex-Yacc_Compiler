@@ -269,7 +269,7 @@ fun_ids
         $$=createNode($1, $2, "func_id");
     }
     | /* empty */ {
-        $$=createNode(NULL, NULL, "null");
+        $$=NULL;
     }
 fun_body 
     : exp {$$=$1;}
@@ -278,7 +278,7 @@ params
         $$=createNode($1, $2, "func_id");
     }
     | {
-        $$=createNode(NULL, NULL, "null");
+        $$=NULL;
     }
 param   
     : exp {
@@ -301,7 +301,7 @@ void traverse(struct Node* root) {
         struct Map* func_map = createMap();
         struct Node* funId = root->left->left;
         struct Node* parameter = root->right;
-        while(funId->type!="null"&&parameter->type!="null") {
+        while(funId!=NULL&&parameter!=NULL) {
             add(func_map, funId->left->cval, parameter->left->value);
             funId = funId->right;
             parameter = parameter->right;
