@@ -79,7 +79,7 @@ void traverse(struct Node* root) {
 ... And we just need to print `root->left->value`.
 
 - **AST structure**
-    ![image](https://imgur.com/FmCKBAo =40%x)
+    ![image](https://imgur.com/FmCKBAo)
 
 
 
