@@ -56,7 +56,6 @@ int sp;
 struct Node* createNode(struct Node*, struct Node*, char*);
 struct Map* createMap();
 void traverse(struct Node*);
-struct Map* stack[MAX_STACK_SIZE];
 void add(struct Map*, char*, int);
 void addNode(struct Map*, char*, struct Node*);
 int get(struct Map*, char*);
@@ -70,6 +69,7 @@ struct Map* pop();
 struct Node *root=NULL;
 struct Map *map=NULL;
 struct Map *funcs=NULL;
+struct Map* stack[MAX_STACK_SIZE];
 
 %}
 %union {
