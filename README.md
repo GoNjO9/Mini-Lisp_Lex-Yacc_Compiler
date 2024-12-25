@@ -105,7 +105,7 @@ adds
         $$=$1;
     }
 ```
-I feel smart by just using `value*(-1)+1` to implement the not operator.
+By using `value*(-1)+1` to implement the not operator.
 ```C=
 void traverse(struct Node* root) {
     ...
