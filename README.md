@@ -1,5 +1,4 @@
 # Mini-Lisp, Compiler Final Project
-I don't know how to use `.bat` and `.sh`.
 ## Implement Approach
 ### Main Idea
 Build an AST while parsing and traverse the AST in pos-order.
@@ -300,6 +299,7 @@ fun_call
 Now we can create the same AST structure as above.
 
 ## Execute Command (Powershell)
+I don't know how to use `.bat` or `.sh`.
 ```shel=
 bison -d -o a.tab.c a.y
 gcc -c -g -I.. a.tab.c
