@@ -57,6 +57,8 @@ Not all types of nodes will be processed during traversal, some node types are c
 - *func* => function "root", we can map `func_name` to **func_node**
 - *func_call*
 - *func_id* => it's actually the node of parameters.
+- *func_body* => function operating area below this node.
+    > this type used to prevent variable in function engaging operating before getting assigned a value (else we might get a devide 0 error since the initial node value is 0).
 - *null* => only used when creating an empty map (`char*` => `Node*`)
 
     
