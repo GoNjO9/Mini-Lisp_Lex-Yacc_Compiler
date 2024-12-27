@@ -2,34 +2,13 @@
 #include "a.tab.h"
 struct Node{
     char*   type;
-    /*
-    all possible type:
-        stmts
-        pn (printnum)
-        pb (printbool)
-        bool
-        number
-        add
-        sub
-        mul
-        div
-        mod
-        >
-        <
-        equ
-        neg (for equ negative)
-        and
-        or
-        not
-        if
-    */
     int     value;
     char*   cval;
     struct Node* left;
     struct Node* middle;
     struct Node* right;
 };
-struct Node* createNoded(struct Node* pLeft, struct Node* pRight, char* node_type) {
+struct Node* createNodeLex(struct Node* pLeft, struct Node* pRight, char* node_type) {
     struct Node *node = (struct Node *) malloc( sizeof(struct Node) );
     node->type = node_type;
     node->left = pLeft;
@@ -42,7 +21,6 @@ struct Node* createNoded(struct Node* pLeft, struct Node* pRight, char* node_typ
 %}
 digit		[0-9]
 letter		[a-z]
-sep      	'\t'|'\n'|'\r'|' '
 num 		0|[1-9]{digit}*|-[1-9]{digit}*
 id			{letter}({letter}|{digit}|-)*
 bTrue		#t
@@ -73,13 +51,13 @@ bFalse      #f
 {bFalse}        {yylval.ival=0; return(BOOL);}
 {num}           {yylval.ival=atoi(yytext); return(NUMBER);}
 {id}	        {   /* IDENTIFIER */
-    yylval.nd = createNoded(NULL, NULL, "string");
+    yylval.nd = createNodeLex(NULL, NULL, "string");
     yylval.nd->cval = strdup(yytext);
     return ID;
 }
 
-"("|")"	        {return yytext[0];}
-.|\n	        {/* do nothing */}
+"("|")"	                    {return yytext[0];}
+.|"\t"|"\n"|"\r"|" "	    {/* do nothing */}
 
 %%
 

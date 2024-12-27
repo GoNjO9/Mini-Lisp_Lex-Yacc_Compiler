@@ -11,34 +11,6 @@ void yyerror(const char *message);
 
 struct Node{
     char*   type;
-    /*
-    all possible types:
-        stmts
-        pn (printnum)
-        pb (printbool)
-        bool
-        number
-        add
-        sub
-        mul
-        div
-        mod
-        >
-        <
-        equ
-        neg (for equ negative)
-        and
-        or
-        not
-        if
-        variable
-        func
-        func_call
-        func_id
-        func_body
-        null (do nothing with this node)
-        string (only for creating node in lex)
-    */
     int     value;
     char*   cval;
     struct Node* left;
@@ -293,39 +265,34 @@ fun_name
 %%
 void traverse(struct Node* root, char* argument) {
     if(root==NULL) return;
-    printf("traverse: %d, name=%s, argument=%s\n", t_count, root->type, argument);
+    /* printf("traverse: %d, name=%s, argument=%s\n", t_count, root->type, argument); */
     t_count++;
-    /* printf("visiting %s, %d\n", root->type, root->value); */
-    /* printf("go to visit(left)\n"); */
     if(root->type=="func_body") {
         if(argument!="function_operating") return;
     }
-    char src[200];
-    char dest[200];
+    /* traverse with these and track the AST
+    char src[200], dest[200];
     strcpy(src,  " left");
-    strcpy(dest, argument);
-    traverse(root->left, strcat(dest, src));
-    /* printf("go to visit(right)\n"); */
-    char src2[200];
-    char dest2[200];
-    strcpy(src2,  " right");
-    strcpy(dest2, argument);
-    traverse(root->right, strcat(dest2, src2));
-    /* printf(">>>%s: ", root->type); */
-    /* printf("%d\n", root->value); */
+    strcpy(dest, argument); 
+    traverse(root->left, strcat(src, dest));
+    strcpy(src,  " right");
+    strcpy(dest, strcat(src, dest)); 
+    traverse(root->right, argument);
+    */
+    traverse(root->left, argument);
+    traverse(root->right, argument);
     if(root->type=="func_call") {
-        struct Map* func_map = createMap();
+        struct Map* local_map = createMap();
         struct Node* funId = root->left->left;
         struct Node* parameter = root->right;
         while(funId!=NULL&&parameter!=NULL) {
-            add(func_map, funId->left->cval, parameter->left->value);
+            add(local_map, funId->left->cval, parameter->left->value);
             funId = funId->right;
             parameter = parameter->right;
-            /* printf("%s %s \n", funId->left->value, parameter->left->value); */
         }
-        /* printMap(func_map, "func variable"); */
+        /* printMap(local_map, "local variable"); */
         /* printMap(funcs, "funcs set"); */
-        push(func_map);
+        push(local_map);
         traverse(root->left->right, "function_operating");
         root->value = root->left->right->left->value;
         freeMap(pop());
@@ -526,9 +493,7 @@ int main(int argc, char *argv[]) {
     map = createMap();
     funcs = createMap();
     yyparse();
-    /* fprintf (stderr, "parse done\n"); */
     traverse(root, "root");
-    /* fprintf (stderr, "traverse done\n"); */
     /* printMap(map, "public variable"); */
     freeMap(map);
     freeMap(funcs);
