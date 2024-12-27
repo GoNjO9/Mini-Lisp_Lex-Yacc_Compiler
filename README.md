@@ -1,4 +1,5 @@
 # Mini-Lisp, Compiler Final Project
+I don't know how to use `.bat` and `.sh`.
 ## Implement Approach
 ### Main Idea
 Build an AST while parsing and traverse the AST in pos-order.
