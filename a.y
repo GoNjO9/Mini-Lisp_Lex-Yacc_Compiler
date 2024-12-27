@@ -35,6 +35,7 @@ struct Node{
         func
         func_call
         func_id
+        func_body
         null (do nothing with this node)
         string (only for creating node in lex)
     */
@@ -55,7 +56,7 @@ struct Map{
 int sp;
 struct Node* createNode(struct Node*, struct Node*, char*);
 struct Map* createMap();
-void traverse(struct Node*);
+void traverse(struct Node*, char*);
 void add(struct Map*, char*, int);
 void addNode(struct Map*, char*, struct Node*);
 int get(struct Map*, char*);
@@ -66,6 +67,7 @@ void push(struct Map*);
 struct Map* pop();
 
 /* global variable */
+int t_count=0;
 struct Node *root=NULL;
 struct Map *map=NULL;
 struct Map *funcs=NULL;
@@ -123,7 +125,7 @@ exp
     | num_op        {$$=$1;}
     | logical_op    {$$=$1;}
     | if_exp        {$$=$1;}
-    | var           {$$=$1; $$->type="variable"}
+    | var           {$$=$1;}
     | fun_exp       {$$=$1;}
     | fun_call      {$$=$1;}
     ;
@@ -236,7 +238,8 @@ else_exp
 def_stmt
     : '(' DEF var exp')' {
         if($4->type!="func") {
-            traverse($4);
+            printf("VAR_DEF: %s\n", $3->cval);
+            traverse($4, "VAR_DEF_EXP");
             addNode(map, $3->cval, $4);
             $$=$4;
         } else {
@@ -246,7 +249,7 @@ def_stmt
     }
     ;
 var
-    : ID {$$=$1;}
+    : ID {$$=$1; $$->type="variable";}
 
 fun_call
     : '(' fun_exp params ')' {
@@ -264,14 +267,15 @@ fun_id
         $$=$2;
     }
 fun_ids
-    : ID fun_ids {
+    : var fun_ids {
         $$=createNode($1, $2, "func_id");
+        $1->type="variable";
     }
     | /* empty */ {
         $$=NULL;
     }
 fun_body 
-    : exp {$$=$1;}
+    : exp {$$=createNode($1, NULL, "func_body");}
 params
     : param params {
         $$=createNode($1, $2, "func_id");
@@ -287,13 +291,26 @@ param
 fun_name 
     : ID {$$=$1;}
 %%
-void traverse(struct Node* root) {
+void traverse(struct Node* root, char* argument) {
     if(root==NULL) return;
+    printf("traverse: %d, name=%s, argument=%s\n", t_count, root->type, argument);
+    t_count++;
     /* printf("visiting %s, %d\n", root->type, root->value); */
     /* printf("go to visit(left)\n"); */
-    traverse(root->left);
+    if(root->type=="func_body") {
+        if(argument!="function_operating") return;
+    }
+    char src[200];
+    char dest[200];
+    strcpy(src,  " left");
+    strcpy(dest, argument);
+    traverse(root->left, strcat(dest, src));
     /* printf("go to visit(right)\n"); */
-    traverse(root->right);
+    char src2[200];
+    char dest2[200];
+    strcpy(src2,  " right");
+    strcpy(dest2, argument);
+    traverse(root->right, strcat(dest2, src2));
     /* printf(">>>%s: ", root->type); */
     /* printf("%d\n", root->value); */
     if(root->type=="func_call") {
@@ -304,12 +321,13 @@ void traverse(struct Node* root) {
             add(func_map, funId->left->cval, parameter->left->value);
             funId = funId->right;
             parameter = parameter->right;
+            /* printf("%s %s \n", funId->left->value, parameter->left->value); */
         }
-        /* printMap(func_map, "func"); */
+        /* printMap(func_map, "func variable"); */
         /* printMap(funcs, "funcs set"); */
         push(func_map);
-        traverse(root->left->right);
-        root->value = root->left->right->value;
+        traverse(root->left->right, "function_operating");
+        root->value = root->left->right->left->value;
         freeMap(pop());
         return;
     }
@@ -335,6 +353,10 @@ void traverse(struct Node* root) {
         root->value = root->left->value * root->right->value;
     }
     if(root->type=="div") {
+        if(root->right->value==0){
+            printf("devide 0 error when %d / %d\n", root->left->value, root->right->value);
+            return;
+        }
         root->value = root->left->value / root->right->value;
     }
     if(root->type=="mod") {
@@ -377,7 +399,7 @@ void traverse(struct Node* root) {
         root->value=root->left->value*(-1)+1;
     }
     if(root->type=="if") {
-        traverse(root->middle);
+        traverse(root->middle, "if_middle");
         if(root->middle->value==1){
             root->value = root->left->value;
         } else {
@@ -484,8 +506,9 @@ void freeMap(struct Map *map) {
 }
 void push(struct Map *val) {
     if(sp < MAX_STACK_SIZE) {
-        stack[sp++] = createMap();
-        stack[sp++] = val;
+        stack[sp] = createMap();
+        stack[sp] = val;
+        sp++;
     }
     else {printf("Stack overflow\n");}
 }
@@ -504,7 +527,7 @@ int main(int argc, char *argv[]) {
     funcs = createMap();
     yyparse();
     /* fprintf (stderr, "parse done\n"); */
-    traverse(root);
+    traverse(root, "root");
     /* fprintf (stderr, "traverse done\n"); */
     /* printMap(map, "public variable"); */
     freeMap(map);
