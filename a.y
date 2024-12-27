@@ -210,7 +210,6 @@ else_exp
 def_stmt
     : '(' DEF var exp')' {
         if($4->type!="func") {
-            printf("VAR_DEF: %s\n", $3->cval);
             traverse($4, "VAR_DEF_EXP");
             addNode(map, $3->cval, $4);
             $$=$4;

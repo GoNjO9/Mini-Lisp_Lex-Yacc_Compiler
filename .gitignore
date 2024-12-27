@@ -4,3 +4,4 @@ a.lsp
 a.out
 *.exe
 /test_data
+/test_output
