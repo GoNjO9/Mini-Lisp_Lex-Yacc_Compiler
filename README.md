@@ -264,6 +264,8 @@ I drew my envisioned AST (by the way yacc do the parsing). Then, I wrote a loop 
 
 ![image](https://github.com/user-attachments/assets/35ce5fd3-93a9-4345-847a-ae612b5fe104)
 
+> The AST structure is an old version. Current vesion we have `func_body` node as the func node's `right`, numerical exp node is the left node of `func_body`, use this to prevent numerical operation occurring before we assign the local variables a value (as above mentioned).
+
 ---
 
 ### Named Function
